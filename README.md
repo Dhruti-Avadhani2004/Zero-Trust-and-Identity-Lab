@@ -6,8 +6,9 @@ This is a lab guide designed for Junior Security Analysts focused on the transit
 [Open the Full Lab Guide](./docs/lab-guide.md)
 
 ## Pre-requisites
+
 | Requirement | Details |
-|------------| --------|
+| --- | --- |
 | OS | Ubuntu 20.04+ / Debian / Kali Linux |
 | Identity | GitHub or Google Account (for SSO Login) |
 | Skills Required | Basic Linux Terminal Usage |
