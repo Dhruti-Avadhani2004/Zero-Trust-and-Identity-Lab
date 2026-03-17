@@ -9,10 +9,10 @@
 ## Table of Contents
 - [Introduction](#introduction)
 - [Lab Environment](#lab-environment)
-- [Milestone 1 — Identity-Centric Connectivity](#milestone-1--identity-centric-connectivity)
-- [Milestone 2 — Micro-segmentation](#milestone-2--micro-segmentation)
-- [Milestone 3 — Least Privilege](#milestone-3--least-privilege)
-- [Milestone 4 — GenAI as Security Co-pilot](#milestone-4--genai-as-security-co-pilot)
+- [Milestone 1 — Identity-Centric Connectivity](#milestone-1---identity-centric-connectivity)
+- [Milestone 2 — Micro-segmentation](#milestone-2---micro-segmentation)
+- [Milestone 3 — Least Privilege](#milestone-3---least-privilege)
+- [Milestone 4 — GenAI as Security Co-pilot](#milestone-4---genai-as-security-co-pilot)
 - [Trust Boundary Diagram](#trust-boundary-diagram)
 - [Check Your Understanding](#check-your-understanding)
 
