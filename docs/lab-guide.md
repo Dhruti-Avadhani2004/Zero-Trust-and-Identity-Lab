@@ -723,3 +723,165 @@ A good AI response will identify entries like these and explain them:
 | Requires deep log expertise | AI explains in plain English |
 
 > 🎉 **Milestone 4 Complete!** You have used AI as a real security tool — not just a chatbot. This is how modern security analysts work.
+
+
+---
+
+## Trust Boundary Diagram
+
+This diagram shows how your Zero Trust setup controls access at every layer — from network identity all the way down to individual user permissions.
+```mermaid
+graph TD
+    A[👤 User] -->|Authenticates with GitHub/Google| B[Tailscale Identity Layer]
+    B -->|Identity verified| C{ACL Policy Check}
+    C -->|Port 8080 only| D[✅ Web Service Allowed]
+    C -->|Any other port| E[❌ Blocked by ACL]
+    D -->|Authenticated user actions| F{sudoers Policy Check}
+    F -->|service ssh restart| G[✅ Allowed - Least Privilege]
+    F -->|cat /etc/shadow| H[❌ Blocked - Not in sudoers]
+    F -->|apt update| I[❌ Blocked - Not in sudoers]
+    G -->|All actions recorded| J[📋 journalctl logs]
+    H -->|Denied actions recorded| J
+    I -->|Denied actions recorded| J
+    J -->|Paste into AI| K[🤖 GenAI Analysis]
+
+    style A fill:#4A90D9,color:#fff
+    style B fill:#7B68EE,color:#fff
+    style C fill:#FFA500,color:#fff
+    style D fill:#28A745,color:#fff
+    style E fill:#DC3545,color:#fff
+    style F fill:#FFA500,color:#fff
+    style G fill:#28A745,color:#fff
+    style H fill:#DC3545,color:#fff
+    style I fill:#DC3545,color:#fff
+    style J fill:#17A2B8,color:#fff
+    style K fill:#6F42C1,color:#fff
+```
+
+### Reading the diagram
+
+| Colour | Meaning |
+|---|---|
+| 🔵 Blue | User / actor |
+| 🟣 Purple | Identity and policy layers |
+| 🟠 Orange | Decision points |
+| 🟢 Green | Allowed actions |
+| 🔴 Red | Blocked actions |
+| 🔷 Teal | Logging |
+| 🟤 Dark purple | AI analysis |
+
+### The Three Trust Boundaries
+
+**Boundary 1 — Network layer (Tailscale)**
+No one can even reach your machine without first authenticating with a verified identity. IP addresses mean nothing here.
+
+**Boundary 2 — Service layer (ACL rules)**
+Even authenticated users can only reach port 8080. All other ports are silently blocked regardless of who is asking.
+
+**Boundary 3 — Privilege layer (sudoers)**
+Even users with network access can only perform the specific actions their role requires. Everything else is denied.
+
+> 💡 **This is defence in depth** — multiple independent layers of security. An attacker would need to break through all three layers, not just one.
+
+---
+
+## Check Your Understanding
+
+Test yourself with these questions. Try to answer them before looking at the answers!
+
+---
+
+**Question 1**
+What is the main difference between Traditional Perimeter Security and Zero Trust Architecture?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+Traditional Perimeter Security trusts everyone inside the network — once you're past the firewall, you can reach anything. Zero Trust trusts no one by default — every access request must be verified regardless of where it comes from.
+
+</details>
+
+---
+
+**Question 2**
+In your Tailscale ACL, what happens to traffic on port 443 (HTTPS)?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+It is blocked. In Zero Trust, the default is DENY. Only port 8080 was explicitly allowed in the ACL. Any port not mentioned is automatically blocked — including port 443.
+
+</details>
+
+---
+
+**Question 3**
+Why did we use `visudo` instead of directly editing `/etc/sudoers` with a text editor?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+`visudo` checks the sudoers file for syntax errors before saving. A syntax error in `/etc/sudoers` can completely lock you out of sudo — meaning you cannot run any admin commands. `visudo` prevents this by validating the file first.
+
+</details>
+
+---
+
+**Question 4**
+What would happen if `junior-admin` tried to run `sudo reboot`?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+It would be blocked. The sudoers rule only allows `junior-admin` to run `/usr/sbin/service ssh restart`. Any other command — including `sudo reboot` — would return "Sorry, user junior-admin is not allowed to execute this command."
+
+</details>
+
+---
+
+**Question 5**
+Why should you never paste real production logs into a public AI tool like ChatGPT?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+Production logs may contain sensitive information such as usernames, IP addresses, hostnames, service names, and access patterns. Pasting these into a public AI tool means that data leaves your organisation and could potentially be used to train AI models or be exposed in a data breach. Always use enterprise AI tools or anonymise logs before analysis.
+
+</details>
+
+---
+
+**Question 6**
+What does the `--operator=$USER` flag do in `sudo tailscale up --operator=$USER`?
+
+<details>
+<summary>Click to reveal answer</summary>
+
+It grants your normal (non-root) user the ability to control Tailscale without needing `sudo` every time. Without this flag, only root can run Tailscale commands. `$USER` automatically fills in your current username.
+
+</details>
+
+---
+
+## Congratulations! 🎉
+
+You have successfully completed the Zero Trust & Identity Lab. Here is what you built:
+
+| Milestone | What you proved |
+|---|---|
+| 1 — Identity access | Network access controlled by identity, not IP |
+| 2 — Micro-segmentation | Only port 8080 accessible, all else blocked |
+| 3 — Least privilege | junior-admin limited to one exact command |
+| 4 — GenAI co-pilot | AI can analyse logs and explain security events |
+
+### What to explore next
+
+- **Tailscale SSH** — replace traditional SSH keys with identity-based SSH
+- **Tailscale exit nodes** — route all traffic through a trusted node
+- **NIST SP 800-207** — read the full Zero Trust standard your lab is based on
+- **Falco** — open source runtime security and log monitoring
+- **osquery** — SQL-powered endpoint visibility tool
+
+---
+
+*Lab guide authored by Dhruti Avadhani — Zero Trust & Identity Lab — 2024*
