@@ -139,7 +139,8 @@ Building dependency tree... Done
 All packages are up to date.
 ```
 
-![apt update output](../assets/step1-apt-update.png)
+![apt update output](../assets/sudo_apt_update.png)
+![apt upgrade output](../assets/sudo_apt_upgrade.png)
 
 ---
 
