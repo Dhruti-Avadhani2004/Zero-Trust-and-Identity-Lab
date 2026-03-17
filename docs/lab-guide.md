@@ -1,4 +1,4 @@
-# 🔐 Zero Trust & Identity Lab Guide
+# Zero Trust & Identity Lab Guide
 
 > **Difficulty:** Beginner friendly  
 > **Time Required:** ~2 hours  
