@@ -251,3 +251,348 @@ You should see your Kali machine listed with its Tailscale IP and your account i
 | No record of who accessed what | Every connection tied to a named identity |
 
 > 🎉 **Milestone 1 Complete!** Your machine is now on an identity-based network. Access is controlled by **who you are**, not **where you are**.
+
+
+---
+
+## Milestone 2 — Micro-segmentation
+
+### What This Milestone Covers
+
+Being on a private network doesn't mean you should have access to everything on it. In traditional networks, once you're inside, you can reach any service on any port — this is called **lateral movement** and it's how attackers spread through a network after getting in.
+
+**Micro-segmentation** solves this by creating strict rules about which services are accessible and on which ports — even for authenticated users.
+
+In this milestone we will:
+- Spin up a real web service on port 8080
+- Write Tailscale ACL rules that allow ONLY port 8080
+- Prove that all other ports are blocked
+
+---
+
+### Step 1 — Create and start a web server on port 8080
+
+First create a simple webpage to serve:
+```bash
+mkdir -p ~/lab-server && echo "<h1>Zero Trust Lab - Service Running on Port 8080</h1>" > ~/lab-server/index.html
+```
+
+Navigate into the folder:
+```bash
+cd ~/lab-server
+```
+
+Start the web server:
+```bash
+python3 -m http.server 8080
+```
+
+Expected output:
+```
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+```
+
+![Web server running on port 8080](../assets/step3-webserver-running.png)
+
+---
+
+### Step 2 — Verify the web server works
+
+Open your browser and visit your Tailscale IP on port 8080:
+```
+http://100.x.x.x:8080
+```
+
+> 💡 Replace `100.x.x.x` with your actual Tailscale IP from `tailscale ip`
+
+You should see:
+```
+Zero Trust Lab - Service Running on Port 8080
+```
+
+![Browser showing web server via Tailscale IP](../assets/step3-webserver-browser.png)
+
+---
+
+### Step 3 — View the default Tailscale ACL
+
+Open your browser and go to:
+```
+https://login.tailscale.com/admin/acls
+```
+
+You will see the default ACL which looks like this:
+```json
+{
+  "grants": [
+    {
+      "src": ["*"],
+      "dst": ["*"],
+      "ip": ["*"]
+    }
+  ]
+}
+```
+
+![Default Tailscale ACL](../assets/step3-acl-default.png)
+
+> ⚠️ **What this means:** Everyone can reach everything on every port. This is the equivalent of having no security at all — classic perimeter thinking.
+
+---
+
+### Step 4 — Write the micro-segmentation ACL
+
+Replace the entire ACL with this:
+```json
+{
+  "grants": [
+    {
+      "src": ["*"],
+      "dst": ["*"],
+      "ip": ["8080"]
+    }
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot", "root"]
+    }
+  ]
+}
+```
+
+![New ACL JSON in editor](../assets/step3-acl-new.png)
+
+Click **"Save"**
+
+![ACL saved confirmation](../assets/step3-acl-saved.png)
+
+---
+
+### What each part of the ACL means
+
+| Part | Meaning |
+|---|---|
+| `"src": ["*"]` | From any authenticated user on the tailnet |
+| `"dst": ["*"]` | To any device on the tailnet |
+| `"ip": ["8080"]` | But ONLY on port 8080 |
+| Everything else | Implicitly blocked |
+
+> 💡 **Key concept:** In Zero Trust, the default is DENY. You explicitly allow only what is needed. Everything not mentioned is automatically blocked.
+
+---
+
+### Step 5 — Test port 8080 is allowed
+
+Visit your web server again via Tailscale IP:
+```
+http://100.x.x.x:8080
+```
+
+It should still load successfully.
+
+![Port 8080 still accessible](../assets/step3-test-8080.png)
+
+---
+
+### Step 6 — Test other ports are blocked
+
+Open a new terminal and run:
+```bash
+curl -v http://100.x.x.x:9090 --max-time 5
+```
+
+Expected output:
+```
+* Trying 100.x.x.x:9090...
+* Connection timed out after 5001 milliseconds
+* Closing connection 0
+curl: (28) Connection timed out after 5000 milliseconds
+```
+
+![Port 9090 blocked](../assets/step3-test-9090.png)
+
+> 💡 **The timeout is a success!** It means the connection never went through. The ACL rule is working exactly as intended.
+
+---
+
+### What You Just Proved ✅
+
+| Port | Result | Reason |
+|---|---|---|
+| 8080 | ✅ Accessible | Explicitly allowed in ACL |
+| 9090 | ❌ Blocked | Not in ACL, default deny |
+| All others | ❌ Blocked | Not in ACL, default deny |
+
+> 🎉 **Milestone 2 Complete!** Even authenticated users on your private network can only reach the specific service you explicitly allowed. Lateral movement is now impossible.
+
+
+---
+
+## Milestone 3 — Least Privilege
+
+### What This Milestone Covers
+
+Even authenticated users with network access should only be able to do exactly what their job requires — nothing more. This is the **Principle of Least Privilege.**
+
+In this milestone we will:
+- Create a `junior-admin` user representing a low-privilege employee
+- Configure a `sudoers` rule giving them exactly ONE permission
+- Prove they can restart the ssh service but cannot read sensitive files
+
+---
+
+### Step 1 — Create the junior-admin user
+```bash
+sudo useradd -m -s /bin/bash junior-admin
+```
+
+Set a password:
+```bash
+sudo passwd junior-admin
+```
+
+> 💡 Use a simple password like `Junior@123` for this lab environment.
+
+Verify the user was created:
+```bash
+cat /etc/passwd | grep junior-admin
+```
+
+Expected output:
+```
+junior-admin:x:1001:1001::/home/junior-admin:/bin/bash
+```
+
+![junior-admin user created](../assets/step4-user-created.png)
+
+---
+
+### Step 2 — Understand the sudoers file
+
+The `/etc/sudoers` file controls who can run which commands as root. The syntax is:
+```
+username    ALL=(ALL)    NOPASSWD: /path/to/command
+```
+
+| Part | Meaning |
+|---|---|
+| `username` | Which user this rule applies to |
+| `ALL=` | On any machine |
+| `(ALL)` | Can run as any user |
+| `NOPASSWD:` | Without entering a password |
+| `/path/to/command` | ONLY this specific command |
+
+> ⚠️ **Always use `visudo` to edit the sudoers file** — it checks for syntax errors before saving. A syntax error in sudoers can lock you out of sudo completely.
+
+---
+
+### Step 3 — Add the least privilege rule
+
+Open the sudoers file safely:
+```bash
+sudo visudo
+```
+
+Scroll to the very bottom and add this line:
+```bash
+junior-admin ALL=(ALL) NOPASSWD: /usr/sbin/service ssh restart
+```
+
+![sudoers file with junior-admin rule](../assets/step4-sudoers.png)
+
+Save and exit:
+- **Nano:** Press `Ctrl + X` → `Y` → `Enter`
+- **Vim:** Press `Esc` → type `:wq` → `Enter`
+
+---
+
+### Step 4 — Switch to junior-admin and test
+
+Switch to the junior-admin user:
+```bash
+su - junior-admin
+```
+
+Your prompt should change to:
+```
+junior-admin@kali:~$
+```
+
+![Switched to junior-admin](../assets/step4-switch-user.png)
+
+---
+
+### Test 1 — junior-admin CAN restart ssh ✅
+```bash
+sudo service ssh restart && service ssh status
+```
+
+Expected output:
+```
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service)
+     Active: active (running) since ...
+```
+
+![SSH restart success](../assets/step4-ssh-restart.png)
+
+> 💡 **No output = success in Linux.** If the command runs silently and returns to the prompt with no error, it worked. We add `service ssh status` to get visible confirmation.
+
+---
+
+### Test 2 — junior-admin CANNOT read sensitive files ❌
+```bash
+sudo cat /etc/shadow
+```
+
+Expected output:
+```
+Sorry, user junior-admin is not allowed to execute
+'/usr/bin/cat /etc/shadow' as root on kali.
+```
+
+![Shadow file blocked](../assets/step4-shadow-blocked.png)
+
+---
+
+### Test 3 — junior-admin CANNOT install software ❌
+```bash
+sudo apt update
+```
+
+Expected output:
+```
+Sorry, user junior-admin is not allowed to execute
+'/usr/bin/apt update' as root on kali.
+```
+
+![apt update blocked](../assets/step4-apt-blocked.png)
+
+---
+
+### Step 5 — Switch back to your main user
+```bash
+exit
+```
+
+Your prompt should return to:
+```
+kali@kali:~$
+```
+
+![Exited junior-admin session](../assets/step4-exit.png)
+
+---
+
+### What You Just Proved ✅
+
+| Action | User | Result | Reason |
+|---|---|---|---|
+| `sudo service ssh restart` | junior-admin | ✅ Allowed | Explicitly in sudoers rule |
+| `sudo cat /etc/shadow` | junior-admin | ❌ Blocked | Not in sudoers rule |
+| `sudo apt update` | junior-admin | ❌ Blocked | Not in sudoers rule |
+
+> 🎉 **Milestone 3 Complete!** A junior employee can do exactly their job — restart a service when needed — but cannot access sensitive data or make system-wide changes.
