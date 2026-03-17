@@ -139,8 +139,8 @@ Building dependency tree... Done
 All packages are up to date.
 ```
 
-![apt update output](../assets/sudo_apt_update.png)
-![apt upgrade output](../assets/sudo_apt_upgrade.png)
+![apt update output](/Zero-Trust-and-Identity-Lab/assets/sudo_apt_update.png)
+![apt upgrade output](/Zero-Trust-and-Identity-Lab/assets/sudo_apt_upgrade.png)
 
 ---
 
