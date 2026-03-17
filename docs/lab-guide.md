@@ -104,3 +104,150 @@ Your Linux Machine (Kali VM)
       └── Records every sudo action
             └── Analysed by Claude/ChatGPT
 ```
+
+---
+
+## Milestone 1 — Identity-Centric Connectivity
+
+### What This Milestone Covers
+
+In traditional networks, access is granted based on IP addresses:
+> "192.168.1.5 is allowed in"
+
+The problem — IP addresses can be spoofed, shared, or reassigned. They tell you **where** a request came from, not **who** made it.
+
+In this milestone we replace IP-based access with **identity-based access** using Tailscale. After this milestone, your machine is accessible only to authenticated users — not to anyone who just knows an IP address.
+
+---
+
+### Step 1 — Update your system
+
+Before installing anything, make sure your system is up to date:
+```bash
+sudo apt update
+```
+```bash
+sudo apt upgrade -y
+```
+
+> ⏱️ This may take 5-10 minutes depending on how many updates are available.
+
+Expected output after `apt update`:
+```
+Reading package lists... Done
+Building dependency tree... Done
+All packages are up to date.
+```
+
+![apt update output](../assets/step1-apt-update.png)
+
+---
+
+### Step 2 — Enable IP Forwarding
+
+Tailscale requires IP forwarding to be enabled on your machine:
+```bash
+echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+Expected output:
+```
+net.ipv4.ip_forward = 1
+```
+
+> 💡 **What is IP forwarding?** It allows your machine to forward network packets between interfaces — required for Tailscale to route traffic correctly.
+
+---
+
+### Step 3 — Install Tailscale
+
+Run this single command to install Tailscale from their official repository:
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+```
+
+Expected output at the end:
+```
+Installation complete! Log in to start using Tailscale by running:
+sudo tailscale up
+```
+
+![Tailscale install complete](../assets/step2-tailscale-install.png)
+
+---
+
+### Step 4 — Log in with your identity
+
+This is the key step — connecting your machine to your personal identity:
+```bash
+sudo tailscale up --operator=$USER
+```
+
+Tailscale will output a URL like this:
+```
+To authenticate, visit:
+https://login.tailscale.com/a/xxxxxxxxxxxxxxx
+```
+
+![Tailscale login URL in terminal](../assets/step2-tailscale-login-url.png)
+
+1. Copy that URL and open it in your browser
+2. Click **"Sign in with GitHub"** or **"Sign in with Google"**
+3. Use your **personal** account (not university)
+4. Click **"Connect"** when prompted
+
+![Browser showing Tailscale connect page](../assets/step2-tailscale-browser.png)
+
+![Tailscale connected success](../assets/step2-tailscale-success.png)
+
+> ⚠️ **Use a personal account!** If you use a university or corporate Google account, you will not have admin access to the Tailscale dashboard.
+
+---
+
+### Step 5 — Verify the connection
+```bash
+tailscale status
+```
+
+Expected output:
+```
+100.x.x.x    kali    yourname@gmail.com    linux    -
+```
+```bash
+tailscale ip
+```
+
+Expected output:
+```
+100.x.x.x
+```
+
+![tailscale status output](../assets/step2-tailscale-status.png)
+
+> 💡 **What is the 100.x.x.x address?** This is your Tailscale IP — a private address tied to your identity, not your physical network location. Anyone who wants to reach your machine must be authenticated on your tailnet.
+
+---
+
+### Step 6 — Verify the admin dashboard
+
+Open your browser and go to:
+```
+https://login.tailscale.com/admin/machines
+```
+
+You should see your Kali machine listed with its Tailscale IP and your account identity next to it.
+
+![Tailscale admin dashboard](../assets/step2-tailscale-dashboard.png)
+
+---
+
+### What You Just Proved ✅
+
+| Before | After |
+|---|---|
+| Machine accessible by IP address | Machine accessible by verified identity only |
+| Anyone who knows the IP can try to connect | Only authenticated users on your tailnet can connect |
+| No record of who accessed what | Every connection tied to a named identity |
+
+> 🎉 **Milestone 1 Complete!** Your machine is now on an identity-based network. Access is controlled by **who you are**, not **where you are**.
