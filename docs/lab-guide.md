@@ -520,8 +520,6 @@ Your prompt should change to:
 junior-admin@kali:~$
 ```
 
-![Switched to junior-admin](../assets/step4-switch-user.png)
-
 ---
 
 ### Test 1 — junior-admin CAN restart ssh
