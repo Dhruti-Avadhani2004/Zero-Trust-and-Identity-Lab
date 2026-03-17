@@ -10,10 +10,10 @@
 
 - [Introduction](#introduction)
 - [Lab Environment](#lab-environment)
-- [Milestone 1 — Identity-Centric Connectivity](#milestone-1---identity-centric-connectivity)
-- [Milestone 2 — Micro-segmentation](#milestone-2---micro-segmentation)
-- [Milestone 3 — Least Privilege](#milestone-3---least-privilege)
-- [Milestone 4 — GenAI as Security Co-pilot](#milestone-4---genai-as-security-co-pilot)
+- [Milestone 1: Identity-Centric Connectivity](#milestone-1-identity-centric-connectivity)
+- [Milestone 2: Micro-segmentation](#milestone-2-micro-segmentation)
+- [Milestone 3: Least Privilege](#milestone-3-least-privilege)
+- [Milestone 4: GenAI as Security Co-pilot](#milestone-4-genai-as-security-co-pilot)
 - [Trust Boundary Diagram](#trust-boundary-diagram)
 - [Check Your Understanding](#check-your-understanding)
 
@@ -108,7 +108,7 @@ Your Linux Machine (Kali VM)
 
 ---
 
-## Milestone 1 — Identity-Centric Connectivity
+## Milestone 1: Identity-Centric Connectivity
 
 ### What This Milestone Covers
 
@@ -256,7 +256,7 @@ You should see your Kali machine listed with its Tailscale IP and your account i
 
 ---
 
-## Milestone 2 — Micro-segmentation
+## Milestone 2: Micro-segmentation
 
 ### What This Milestone Covers
 
@@ -430,7 +430,7 @@ curl: (28) Connection timed out after 5000 milliseconds
 
 ---
 
-## Milestone 3 — Least Privilege
+## Milestone 3: Least Privilege
 
 ### What This Milestone Covers
 
@@ -597,7 +597,7 @@ kali@kali:~$
 
 ---
 
-## Milestone 4 — GenAI as Security Co-pilot
+## Milestone 4: GenAI as Security Co-pilot
 
 ### What This Milestone Covers
 
