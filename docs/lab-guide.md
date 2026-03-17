@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 - [Introduction](#introduction)
 - [Lab Environment](#lab-environment)
 - [Milestone 1 — Identity-Centric Connectivity](#milestone-1---identity-centric-connectivity)
