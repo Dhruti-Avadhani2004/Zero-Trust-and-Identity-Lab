@@ -466,6 +466,7 @@ junior-admin:x:1001:1001::/home/junior-admin:/bin/bash
 ```
 
 ![junior-admin user created](/Zero-Trust-and-Identity-Lab/assets/create_junior_admin_profile.png)
+![junior-admin user created](/Zero-Trust-and-Identity-Lab/assets/verify_junior_admin_created.png)
 
 ---
 
