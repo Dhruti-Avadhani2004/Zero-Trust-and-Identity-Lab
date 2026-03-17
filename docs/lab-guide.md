@@ -596,3 +596,130 @@ kali@kali:~$
 | `sudo apt update` | junior-admin | ❌ Blocked | Not in sudoers rule |
 
 > 🎉 **Milestone 3 Complete!** A junior employee can do exactly their job — restart a service when needed — but cannot access sensitive data or make system-wide changes.
+
+
+---
+
+## Milestone 4 — GenAI as Security Co-pilot
+
+### What This Milestone Covers
+
+Security analysts deal with thousands of log lines every day. Manually reading every line is slow, error-prone, and exhausting. **Generative AI** can act as a co-pilot — reading logs instantly, explaining what happened, and flagging suspicious activity in plain English.
+
+In this milestone we will:
+- Read the authentication logs from our lab session
+- Paste them into Claude or ChatGPT
+- Ask the AI to analyse and explain what security events occurred
+
+> 💡 **This is a real technique** used by security teams today. AI doesn't replace the analyst — it speeds up the investigation so the analyst can focus on decisions, not manual log reading.
+
+---
+
+### Step 1 — View your authentication logs
+
+On Kali Linux, authentication events are stored in the systemd journal. Run this to see all sudo-related activity from the last hour:
+```bash
+sudo journalctl _COMM=sudo --since "1 hour ago"
+```
+
+You will see entries recording every sudo command that was run during your lab — including the junior-admin permission grants and denials.
+
+![journalctl output](../assets/step5-journalctl.png)
+
+> 💡 **Why no auth.log?** Kali Linux uses `systemd-journald` instead of the traditional `auth.log` file. The `journalctl` command is the modern equivalent and contains the same information.
+
+---
+
+### Step 2 — Copy the log output
+
+Run the command again and select all the output text with your mouse. Copy it.
+```bash
+sudo journalctl _COMM=sudo --since "1 hour ago"
+```
+
+---
+
+### Step 3 — Open Claude or ChatGPT
+
+Open a new browser tab and go to:
+- `https://claude.ai` ← recommended
+- `https://chatgpt.com`
+
+---
+
+### Step 4 — Paste this prompt
+
+Copy this entire prompt, paste it into the AI chat, then paste your log lines after it:
+```
+You are a security analyst. I am a Junior Security Analyst 
+learning about Zero Trust Architecture.
+
+Please analyse the following Linux authentication logs from 
+my lab session and explain:
+1. What security events occurred
+2. Which events show successful privilege use
+3. Which events show blocked/denied access attempts
+4. What this tells us about the Principle of Least Privilege
+5. Are there any suspicious or concerning entries?
+
+Here are the logs:
+
+[PASTE YOUR LOG LINES HERE]
+```
+
+![Prompt and logs pasted into AI](../assets/step5-ai-prompt.png)
+
+---
+
+### Step 5 — Review the AI's response
+
+The AI will analyse your logs and explain:
+- Which commands were run with sudo
+- Which were allowed vs denied
+- What the pattern tells us about access control
+- Any anomalies or concerns
+
+![AI analysis response](../assets/step5-ai-response.png)
+
+---
+
+### What good AI log analysis looks like
+
+A good AI response will identify entries like these and explain them:
+
+| Log entry type | What it means |
+|---|---|
+| `COMMAND=/usr/sbin/service ssh restart` | junior-admin restarted ssh — allowed by sudoers |
+| `command not allowed` | junior-admin tried something outside their permissions |
+| `sudo: pam_unix(sudo:auth)` | A sudo authentication event occurred |
+| `session opened for user root` | A sudo command successfully ran as root |
+| `session closed for user root` | The sudo session ended |
+
+---
+
+### Using AI as a Security Co-pilot — Best Practices
+
+> 💡 **Tip 1 — Be specific in your prompts**
+> The more context you give the AI, the better its analysis. Tell it what you were doing, what users were involved, and what you're looking for.
+
+> 💡 **Tip 2 — Always verify AI findings**
+> AI can make mistakes. Use it to speed up your analysis but always verify important findings yourself.
+
+> 💡 **Tip 3 — Never paste real production logs into public AI tools**
+> In a real company, logs may contain sensitive information. Use private/enterprise AI tools or anonymise logs before pasting.
+
+> 💡 **Tip 4 — Iterate on your prompts**
+> If the first response isn't detailed enough, ask follow-up questions like "Can you explain the denied entries in more detail?" or "What would an attacker learn from these logs?"
+
+---
+
+### What You Just Proved ✅
+
+| Traditional approach | AI-assisted approach |
+|---|---|
+| Manually read hundreds of log lines | AI reads and summarises instantly |
+| Easy to miss patterns | AI identifies patterns across all entries |
+| Time consuming | Results in seconds |
+| Requires deep log expertise | AI explains in plain English |
+
+> 🎉 **Milestone 4 Complete!** You have used AI as a real security tool — not just a chatbot. This is how modern security analysts work.
