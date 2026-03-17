@@ -730,6 +730,7 @@ A good AI response will identify entries like these and explain them:
 ## Trust Boundary Diagram
 
 This diagram shows how your Zero Trust setup controls access at every layer — from network identity all the way down to individual user permissions.
+
 ![Trust Boundary Diagram](../assets/trust-boundary-diagram.png)
 
 ### The Three Trust Boundaries
