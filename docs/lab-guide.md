@@ -242,7 +242,7 @@ You should see your Kali machine listed with its Tailscale IP and your account i
 
 ---
 
-### What You Just Proved ✅
+### What You Just Proved 
 
 | Before | After |
 |---|---|
@@ -416,13 +416,13 @@ curl: (28) Connection timed out after 5000 milliseconds
 
 ---
 
-### What You Just Proved ✅
+### What You Just Proved
 
 | Port | Result | Reason |
 |---|---|---|
-| 8080 | ✅ Accessible | Explicitly allowed in ACL |
-| 9090 | ❌ Blocked | Not in ACL, default deny |
-| All others | ❌ Blocked | Not in ACL, default deny |
+| 8080 | Accessible | Explicitly allowed in ACL |
+| 9090 | Blocked | Not in ACL, default deny |
+| All others | Blocked | Not in ACL, default deny |
 
 > 🎉 **Milestone 2 Complete!** Even authenticated users on your private network can only reach the specific service you explicitly allowed. Lateral movement is now impossible.
 
@@ -523,7 +523,7 @@ junior-admin@kali:~$
 
 ---
 
-### Test 1 — junior-admin CAN restart ssh ✅
+### Test 1 — junior-admin CAN restart ssh
 ```bash
 sudo service ssh restart && service ssh status
 ```
@@ -541,7 +541,7 @@ Expected output:
 
 ---
 
-### Test 2 — junior-admin CANNOT read sensitive files ❌
+### Test 2 — junior-admin CANNOT read sensitive files
 ```bash
 sudo cat /etc/shadow
 ```
@@ -556,7 +556,7 @@ Sorry, user junior-admin is not allowed to execute
 
 ---
 
-### Test 3 — junior-admin CANNOT install software ❌
+### Test 3 — junior-admin CANNOT install software
 ```bash
 sudo apt update
 ```
@@ -585,13 +585,13 @@ kali@kali:~$
 
 ---
 
-### What You Just Proved ✅
+### What You Just Proved
 
 | Action | User | Result | Reason |
 |---|---|---|---|
-| `sudo service ssh restart` | junior-admin | ✅ Allowed | Explicitly in sudoers rule |
-| `sudo cat /etc/shadow` | junior-admin | ❌ Blocked | Not in sudoers rule |
-| `sudo apt update` | junior-admin | ❌ Blocked | Not in sudoers rule |
+| `sudo service ssh restart` | junior-admin | Allowed | Explicitly in sudoers rule |
+| `sudo cat /etc/shadow` | junior-admin | Blocked | Not in sudoers rule |
+| `sudo apt update` | junior-admin | Blocked | Not in sudoers rule |
 
 > 🎉 **Milestone 3 Complete!** A junior employee can do exactly their job — restart a service when needed — but cannot access sensitive data or make system-wide changes.
 
@@ -711,7 +711,7 @@ A good AI response will identify entries like these and explain them:
 
 ---
 
-### What You Just Proved ✅
+### What You Just Proved
 
 | Traditional approach | AI-assisted approach |
 |---|---|
