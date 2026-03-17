@@ -639,7 +639,7 @@ sudo journalctl _COMM=sudo --since "1 hour ago"
 ### Step 3 — Open Claude or ChatGPT
 
 Open a new browser tab and go to:
-- `https://claude.ai` ← recommended
+- `https://claude.ai`
 - `https://chatgpt.com`
 
 ---
@@ -834,14 +834,6 @@ You have successfully completed the Zero Trust & Identity Lab. Here is what you 
 | 3 — Least privilege | junior-admin limited to one exact command |
 | 4 — GenAI co-pilot | AI can analyse logs and explain security events |
 
-### What to explore next
-
-- **Tailscale SSH** — replace traditional SSH keys with identity-based SSH
-- **Tailscale exit nodes** — route all traffic through a trusted node
-- **NIST SP 800-207** — read the full Zero Trust standard your lab is based on
-- **Falco** — open source runtime security and log monitoring
-- **osquery** — SQL-powered endpoint visibility tool
-
 ---
 
-*Lab guide authored by Dhruti Avadhani — Zero Trust & Identity Lab — 2024*
+*Lab guide authored by Dhruti Avadhani — Zero Trust & Identity Lab — 2026*
