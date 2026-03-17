@@ -730,45 +730,7 @@ A good AI response will identify entries like these and explain them:
 ## Trust Boundary Diagram
 
 This diagram shows how your Zero Trust setup controls access at every layer — from network identity all the way down to individual user permissions.
-```mermaid
-graph TD
-    A[👤 User] -->|Authenticates with GitHub/Google| B[Tailscale Identity Layer]
-    B -->|Identity verified| C{ACL Policy Check}
-    C -->|Port 8080 only| D[✅ Web Service Allowed]
-    C -->|Any other port| E[❌ Blocked by ACL]
-    D -->|Authenticated user actions| F{sudoers Policy Check}
-    F -->|service ssh restart| G[✅ Allowed - Least Privilege]
-    F -->|cat /etc/shadow| H[❌ Blocked - Not in sudoers]
-    F -->|apt update| I[❌ Blocked - Not in sudoers]
-    G -->|All actions recorded| J[📋 journalctl logs]
-    H -->|Denied actions recorded| J
-    I -->|Denied actions recorded| J
-    J -->|Paste into AI| K[🤖 GenAI Analysis]
-
-    style A fill:#4A90D9,color:#fff
-    style B fill:#7B68EE,color:#fff
-    style C fill:#FFA500,color:#fff
-    style D fill:#28A745,color:#fff
-    style E fill:#DC3545,color:#fff
-    style F fill:#FFA500,color:#fff
-    style G fill:#28A745,color:#fff
-    style H fill:#DC3545,color:#fff
-    style I fill:#DC3545,color:#fff
-    style J fill:#17A2B8,color:#fff
-    style K fill:#6F42C1,color:#fff
-```
-
-### Reading the diagram
-
-| Colour | Meaning |
-|---|---|
-| 🔵 Blue | User / actor |
-| 🟣 Purple | Identity and policy layers |
-| 🟠 Orange | Decision points |
-| 🟢 Green | Allowed actions |
-| 🔴 Red | Blocked actions |
-| 🔷 Teal | Logging |
-| 🟤 Dark purple | AI analysis |
+![Trust Boundary Diagram](../assets/trust-boundary-diagram.png)
 
 ### The Three Trust Boundaries
 
