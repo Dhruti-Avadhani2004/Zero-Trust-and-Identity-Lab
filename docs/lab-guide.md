@@ -173,7 +173,7 @@ Installation complete! Log in to start using Tailscale by running:
 sudo tailscale up
 ```
 
-![Tailscale install complete](Zero-Trust-and-Identity-Lab/assets/tailscale_installed.png)
+![Tailscale install complete](/Zero-Trust-and-Identity-Lab/assets/tailscale_installed.png)
 
 ---
 
@@ -190,16 +190,16 @@ To authenticate, visit:
 https://login.tailscale.com/a/xxxxxxxxxxxxxxx
 ```
 
-![Tailscale login URL in terminal](Zero-Trust-and-Identity-Lab/assets/login_to_tailscale.png)
+![Tailscale login URL in terminal](/Zero-Trust-and-Identity-Lab/assets/login_to_tailscale.png)
 
 1. Copy that URL and open it in your browser
 2. Click **"Sign in with GitHub"** or **"Sign in with Google"**
 3. Use your **personal** account (not university)
 4. Click **"Connect"** when prompted
 
-![Browser showing Tailscale connect page](Zero-Trust-and-Identity-Lab/assets/connecting_tailscale_to_github.png)
+![Browser showing Tailscale connect page](/Zero-Trust-and-Identity-Lab/assets/connecting_tailscale_to_github.png)
 
-![Tailscale connected success](Zero-Trust-and-Identity-Lab/assets/connected_to_tailscale.png)
+![Tailscale connected success](/Zero-Trust-and-Identity-Lab/assets/connected_to_tailscale.png)
 
 > ⚠️ **Use a personal account!** If you use a university or corporate Google account, you will not have admin access to the Tailscale dashboard.
 
@@ -223,7 +223,7 @@ Expected output:
 100.x.x.x
 ```
 
-![tailscale status output](Zero-Trust-and-Identity-Lab/assets/tailscale_status_and_ip.png)
+![tailscale status output](/Zero-Trust-and-Identity-Lab/assets/tailscale_status_and_ip.png)
 
 > 💡 **What is the 100.x.x.x address?** This is your Tailscale IP — a private address tied to your identity, not your physical network location. Anyone who wants to reach your machine must be authenticated on your tailnet.
 
@@ -238,7 +238,7 @@ https://login.tailscale.com/admin/machines
 
 You should see your Kali machine listed with its Tailscale IP and your account identity next to it.
 
-![Tailscale admin dashboard](Zero-Trust-and-Identity-Lab/assets/tailscale_admin_panel(1).png)
+![Tailscale admin dashboard](/Zero-Trust-and-Identity-Lab/assets/tailscale_admin_panel(1).png)
 
 ---
 
@@ -292,7 +292,7 @@ Expected output:
 Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
 ```
 
-![Web server running on port 8080](http://zero-trust-and-identity-lab/assets/starting_http_server_8080.png)
+![Web server running on port 8080](/Zero-Trust-and-Identity-Lab/assets/starting_http_server_8080.png)
 
 ---
 
@@ -310,7 +310,7 @@ You should see:
 Zero Trust Lab - Service Running on Port 8080
 ```
 
-![Browser showing web server via Tailscale IP]([../assets/step3-webserver-browser.png](http://zero-trust-and-identity-lab/assets/service_running_on_port_8080.png))
+![Browser showing web server via Tailscale IP](/Zero-Trust-and-Identity-Lab/assets/service_running_on_port_8080.png)
 
 ---
 
@@ -334,7 +334,7 @@ You will see the default ACL which looks like this:
 }
 ```
 
-![Default Tailscale ACL](Zero-Trust-and-Identity-Lab/assets/grants_before.png)
+![Default Tailscale ACL](/Zero-Trust-and-Identity-Lab/assets/grants_before.png)
 
 > ⚠️ **What this means:** Everyone can reach everything on every port. This is the equivalent of having no security at all — classic perimeter thinking.
 
@@ -363,7 +363,7 @@ Update the ACL to allow access on port 8080 only:
 }
 ```
 
-![New ACL JSON in editor](Zero-Trust-and-Identity-Lab/assets/grants_after.png)
+![New ACL JSON in editor](/Zero-Trust-and-Identity-Lab/assets/grants_after.png)
 
 Click **"Save"**
 
@@ -391,7 +391,7 @@ http://100.x.x.x:8080
 
 It should still load successfully.
 
-![Port 8080 still accessible](Zero-Trust-and-Identity-Lab/assets/after_updating_acl_rules_getting_response_on_8080.png)
+![Port 8080 still accessible](/Zero-Trust-and-Identity-Lab/assets/after_updating_acl_rules_getting_response_on_8080.png)
 
 ---
 
@@ -410,7 +410,7 @@ Expected output:
 curl: (28) Connection timed out after 5000 milliseconds
 ```
 
-![Port 9090 blocked](Zero-Trust-and-Identity-Lab/assets/connection_closed_on_port_9090_acl_works.png)
+![Port 9090 blocked](/Zero-Trust-and-Identity-Lab/assets/connection_closed_on_port_9090_acl_works.png)
 
 > 💡 **The timeout is a success!** It means the connection never went through. The ACL rule is working exactly as intended.
 
@@ -464,7 +464,7 @@ Expected output:
 junior-admin:x:1001:1001::/home/junior-admin:/bin/bash
 ```
 
-![junior-admin user created](Zero-Trust-and-Identity-Lab/assets/create_junior_admin_profile.png)
+![junior-admin user created](/Zero-Trust-and-Identity-Lab/assets/create_junior_admin_profile.png)
 
 ---
 
@@ -499,7 +499,7 @@ Scroll to the very bottom and add this line:
 junior-admin ALL=(ALL) NOPASSWD: /usr/sbin/service ssh restart
 ```
 
-![sudoers file with junior-admin rule](Zero-Trust-and-Identity-Lab/assets/new_sudoer_file.png)
+![sudoers file with junior-admin rule](/Zero-Trust-and-Identity-Lab/assets/new_sudoer_file.png)
 
 Save and exit:
 - **Nano:** Press `Ctrl + X` → `Y` → `Enter`
@@ -535,7 +535,7 @@ Expected output:
      Active: active (running) since ...
 ```
 
-![SSH restart success](Zero-Trust-and-Identity-Lab/assets/junior_admin_can_only_restart_service.png)
+![SSH restart success](/Zero-Trust-and-Identity-Lab/assets/junior_admin_can_only_restart_service.png)
 
 > 💡 **No output = success in Linux.** If the command runs silently and returns to the prompt with no error, it worked. We add `service ssh status` to get visible confirmation.
 
@@ -552,7 +552,7 @@ Sorry, user junior-admin is not allowed to execute
 '/usr/bin/cat /etc/shadow' as root on kali.
 ```
 
-![Shadow file blocked](Zero-Trust-and-Identity-Lab/assets/junior_admin_has_no_permission_for_anything_else.png)
+![Shadow file blocked](/Zero-Trust-and-Identity-Lab/assets/junior_admin_has_no_permission_for_anything_else.png)
 
 ---
 
@@ -567,7 +567,7 @@ Sorry, user junior-admin is not allowed to execute
 '/usr/bin/apt update' as root on kali.
 ```
 
-![apt update blocked](Zero-Trust-and-Identity-Lab/assets/junior_admin_has_no_permission_for_anything_else.png)
+![apt update blocked](/Zero-Trust-and-Identity-Lab/assets/junior_admin_has_no_permission_for_anything_else.png)
 
 ---
 
@@ -581,7 +581,7 @@ Your prompt should return to:
 kali@kali:~$
 ```
 
-![Exited junior-admin session](Zero-Trust-and-Identity-Lab/assets/logout_as_junior_admin.png)
+![Exited junior-admin session](/Zero-Trust-and-Identity-Lab/assets/logout_as_junior_admin.png)
 
 ---
 
@@ -622,7 +622,7 @@ sudo journalctl _COMM=sudo --since "1 hour ago"
 
 You will see entries recording every sudo command that was run during your lab — including the junior-admin permission grants and denials.
 
-![journalctl output](Zero-Trust-and-Identity-Lab/assets/logs_from_1_hr_ago.png)
+![journalctl output](/Zero-Trust-and-Identity-Lab/assets/logs_from_1_hr_ago.png)
 
 > 💡 **Why no auth.log?** Kali Linux uses `systemd-journald` instead of the traditional `auth.log` file. The `journalctl` command is the modern equivalent and contains the same information.
 
@@ -665,7 +665,7 @@ Here are the logs:
 [PASTE YOUR LOG LINES HERE]
 ```
 
-![Prompt and logs pasted into AI](Zero-Trust-and-Identity-Lab/assets/using_ai_to_analyze_logs.png)
+![Prompt and logs pasted into AI](/Zero-Trust-and-Identity-Lab/assets/using_ai_to_analyze_logs.png)
 
 ---
 
@@ -677,7 +677,7 @@ The AI will analyse your logs and explain:
 - What the pattern tells us about access control
 - Any anomalies or concerns
 
-![AI analysis response](Zero-Trust-and-Identity-Lab/assets/1.png)
+![AI analysis response](/Zero-Trust-and-Identity-Lab/assets/1.png)
 
 ---
 
@@ -729,7 +729,7 @@ A good AI response will identify entries like these and explain them:
 
 This diagram shows how your Zero Trust setup controls access at every layer — from network identity all the way down to individual user permissions.
 
-![Trust Boundary Diagram](Zero-Trust-and-Identity-Lab/assets/trust_boundary.png)
+![Trust Boundary Diagram](/Zero-Trust-and-Identity-Lab/assets/trust_boundary.png)
 
 ### The Three Trust Boundaries
 
